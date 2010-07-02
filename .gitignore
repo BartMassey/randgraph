@@ -1,0 +1,4 @@
+/.hg/
+*.hi
+*.o
+randgraph
