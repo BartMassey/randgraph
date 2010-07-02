@@ -50,9 +50,6 @@ randEdges n p gn =
                 where
                   (p0, gn''') = random gn''
   
-uniq :: Ord a => [a] -> [a]
-uniq = map head . group . sort
-
 randGraph :: (Integral a, RealFrac b, Random b, RandomGen g) =>
              a -> b -> g -> [[a]]
 randGraph n p gn =
@@ -60,7 +57,7 @@ randGraph n p gn =
     where
       (rp, gn') = randPath n gn
       (re, _) = randEdges n p gn'
-      edges = uniq (rp ++ re)
+      edges = sort $ nub (rp ++ re)
 
 main :: IO ()
 main = do
