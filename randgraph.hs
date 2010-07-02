@@ -28,12 +28,12 @@ randPath n gn =
 filterR :: RandomGen g => (a -> g -> (Bool, g)) -> g -> [a] -> ([a], g)
 filterR _ gn [] = ([], gn)
 filterR f gn (e : es) =
-    case f e gn of
-      (True, gn') ->
-          let (es', gn'') = filterR f gn' es in
-          (e : es, gn'')
-      (False, gn') ->
-          filterR f gn' es
+    case b of
+      True -> (e : es', gn'')
+      False -> r
+    where
+      (b, gn') = f e gn
+      r@(es', gn'') =  filterR f gn' es
 
 randEdges :: (Integral a, RealFrac b, Random b, RandomGen g) =>
              a -> b -> g -> ([(a, a)], g)
