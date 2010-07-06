@@ -48,18 +48,14 @@ shuffleMArray :: (MArray a e m, ShuffleIx i, RandomGen g)
               => a i e -> g -> m g
 shuffleMArray a g = do
   (lb, ub) <- getBounds a
-  g' <- shuffle_elems g (range (lb, ub)) ub a
-  return g'
-  where
-    shuffle_elems g [] _ a = return g
-    shuffle_elems g [_] _ a = return g
-    shuffle_elems g (lb : lbs) ub a = do
+  let
+    shuffle_elems g [] a = return g
+    shuffle_elems g [_] a = return g
+    shuffle_elems g (lb : lbs) a = do
       let (r, g') = randomR (lb, ub) g
-      array_exchange a lb r
-      shuffle_elems g' lbs ub a
-      where
-        array_exchange a i1 i2 = do
-          e1 <- readArray a i1
-          e2 <- readArray a i2
-          writeArray a i2 e1
-          writeArray a i1 e2
+      e1 <- readArray a r
+      e2 <- readArray a ub
+      writeArray a ub e1
+      writeArray a r e2
+      shuffle_elems g' lbs a
+  shuffle_elems g (range (lb, ub)) a
